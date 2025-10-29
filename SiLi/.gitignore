@@ -1,8 +1,0 @@
-#ignore build
-build/
-
-#ignore simData
-simData/
-
-#ignore root files!
-*.root
