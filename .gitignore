@@ -1,5 +1,5 @@
 # Ignore all build folders anywhere in the repository
-**/build/
+build/
 
 # Ignore all image files anywhere in the repository
 *.jpg
