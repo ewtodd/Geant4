@@ -22,7 +22,7 @@ void PrimaryGenerator::GeneratePrimaries(G4Event *anEvent) {
   fParticleGun->SetParticleCharge(ionCharge);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0, 0, 1));
 
-  G4double energy = 91.87 * MeV;
+  G4double energy = 92.0 * MeV;
   fParticleGun->SetParticleEnergy(energy);
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
