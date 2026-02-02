@@ -19,18 +19,22 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
 public:
   DetectorConstruction();
   ~DetectorConstruction();
-  G4LogicalVolume *GetScoringVolumeLaBr3() const {
-    return fScoringVolumeLaBr3;
-  };
-  G4LogicalVolume *GetScoringVolumeCeBr3() const {
-    return fScoringVolumeCeBr3;
-  };
+
+  G4LogicalVolume *GetScoringVolumeNaI() const { return fScoringVolumeNaI; }
+  G4LogicalVolume *GetScoringVolumeEJ309() const { return fScoringVolumeEJ309; }
+
   virtual G4VPhysicalVolume *Construct();
 
 private:
-  G4LogicalVolume *fScoringVolumeLaBr3;
-  G4LogicalVolume *fScoringVolumeCeBr3;
+  G4LogicalVolume *fScoringVolumeNaI;
+  G4LogicalVolume *fScoringVolumeEJ309;
+
   virtual void ConstructSDandField();
+
+  // Material creation methods
+  G4Material *CreateNaITl();
+  G4Material *CreateEJ309();
+  G4Material *CreateBoratedPolyethylene();
 };
 
 #endif

@@ -3,15 +3,9 @@
 RunAction::RunAction() {
   G4AnalysisManager *man = G4AnalysisManager::Instance();
 
-  man->CreateNtuple("LaBr3", "LaBr3");
+  man->CreateNtuple("CdTe", "CdTe");
   man->CreateNtupleDColumn("fEDep");
-  man->CreateNtupleDColumn("fTime");
   man->FinishNtuple(0);
-
-  man->CreateNtuple("CeBr3", "CeBr3");
-  man->CreateNtupleDColumn("fEDep");
-  man->CreateNtupleDColumn("fTime");
-  man->FinishNtuple(1);
 }
 RunAction::~RunAction() {}
 void RunAction::BeginOfRunAction(const G4Run *run) {

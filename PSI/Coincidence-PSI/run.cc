@@ -16,7 +16,7 @@ RunAction::RunAction() {
   man->CreateNtuple("NaI", "NaI");
   man->CreateNtupleDColumn("fEDep");
   man->CreateNtupleDColumn("fTime");
-  man->FinishNtuple(1);
+  man->FinishNtuple(2);
 }
 RunAction::~RunAction() {}
 void RunAction::BeginOfRunAction(const G4Run *run) {
@@ -30,5 +30,5 @@ void RunAction::EndOfRunAction(const G4Run *) {
   G4AnalysisManager *man = G4AnalysisManager::Instance();
 
   man->Write();
-  man->CloseFile("output.root");
+  man->CloseFile();
 }

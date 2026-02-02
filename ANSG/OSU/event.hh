@@ -17,12 +17,10 @@ public:
   virtual void BeginOfEventAction(const G4Event *);
   virtual void EndOfEventAction(const G4Event *);
 
-  void AddEdepLaBr3(G4double edep, G4double time);
-  void AddEdepCeBr3(G4double edep, G4double time);
+  void AddEdepCdTe(G4double edep);
 
 private:
-  G4double fEdepLaBr3, fEdepCeBr3;
-  G4double fTimeLaBr3, fTimeCeBr3;
+  G4double fEdepCdTe;
 };
 
 #endif
