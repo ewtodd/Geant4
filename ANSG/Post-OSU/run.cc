@@ -3,7 +3,7 @@
 RunAction::RunAction() {
   G4AnalysisManager *man = G4AnalysisManager::Instance();
 
-  man->CreateNtuple("CdTe", "CdTe");
+  man->CreateNtuple("CZT", "CZT");
   man->CreateNtupleDColumn("fEDep");
   man->FinishNtuple(0);
 }

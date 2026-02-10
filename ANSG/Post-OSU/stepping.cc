@@ -15,16 +15,12 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
   const DetectorConstruction *detectorConstruction =
       static_cast<const DetectorConstruction *>(
           G4RunManager::GetRunManager()->GetUserDetectorConstruction());
-
-  G4LogicalVolume *fScoringVolumeCZT = detectorConstruction->GetScoringVolume();
-  G4LogicalVolume *fScoringVolumeHPGe = detectorConstruction->GetHPGeVolume();
-
   G4double edep = step->GetTotalEnergyDeposit();
 
-  // Route energy deposition to appropriate detector
+  G4LogicalVolume *fScoringVolumeCZT =
+      detectorConstruction->GetScoringVolumeCZT();
+
   if (volume == fScoringVolumeCZT) {
-    fEventAction->AddEdepCZT(edep);
-  } else if (volume == fScoringVolumeHPGe) {
-    fEventAction->AddEdepHPGe(edep);
+    fEventAction->AddEdepCdTe(edep);
   }
 }
