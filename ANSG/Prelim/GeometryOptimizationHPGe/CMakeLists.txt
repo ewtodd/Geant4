@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 
 project(GeSimulation)
 
@@ -19,20 +19,19 @@ file(GLOB sources ${PROJECT_SOURCE_DIR}/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/*.hh)
 
 # Crystal Maps and Macros
-set(GeSimulation_maps   
+set(GeSimulation_maps
     CrystalMaps/Ge/config.txt
     CrystalMaps/Ge/FT.ssv
     CrystalMaps/Ge/FTVec.ssv
     CrystalMaps/Ge/L.ssv
     CrystalMaps/Ge/LVec.ssv
     CrystalMaps/Ge/ST.ssv
-    CrystalMaps/Ge/STVec.ssv
-  )
+    CrystalMaps/Ge/STVec.ssv)
 file(GLOB MACRO_FILES "*.mac")
 
 # Copy maps and macros
 foreach(_map ${GeSimulation_maps})
-    file(COPY ${_map} DESTINATION ${PROJECT_BINARY_DIR}/Ge/)
+  file(COPY ${_map} DESTINATION ${PROJECT_BINARY_DIR}/Ge/)
 endforeach()
 file(COPY ${MACRO_FILES} DESTINATION ${PROJECT_BINARY_DIR})
 
