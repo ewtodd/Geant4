@@ -17,6 +17,26 @@
       pkgs = nixpkgs.legacyPackages.${system};
       geant4custom = pkgs.geant4.override { enableQt = true; };
       analysis-utils = utils.packages.${system}.default;
+
+      # Set to true to patch Cf-252 decay data to spontaneous fission only
+      patchCf252 = true;
+
+      g4RadioactiveDecay =
+        if patchCf252 then
+          pkgs.geant4.data.G4RadioactiveDecay.overrideAttrs (old: {
+            postInstall = (old.postInstall or "") + ''
+              datadir=$(find $out/share -name "G4RadioactiveDecay*" -type d)
+              cat > "$datadir/z98.a252" <<'DECAY'
+# 252CF ( 2.645 Y   )
+#  Excitation  flag   Halflife  Mode    Daughter Ex flag   Intensity          Q
+P            0  - 8.346985e+07
+                              SpFission            0               1
+                              SpFission            0  -          100        1e-06
+DECAY
+            '';
+          })
+        else
+          pkgs.geant4.data.G4RadioactiveDecay;
     in
     {
       devShells.${system}.default = pkgs.mkShell {
@@ -36,7 +56,7 @@
           geant4.data.G4ENSDFSTATE
           geant4.data.G4PARTICLEXS
           geant4.data.G4TENDL
-          geant4.data.G4RadioactiveDecay
+          g4RadioactiveDecay
         ];
         shellHook = ''
           export SHELL="/run/current-system/sw/bin/bash"
@@ -45,7 +65,7 @@
           export G4VIS_DEFAULT_DRIVER=TSG_QT_ZB
 
           export AMD_VULKAN_ICD=RADV
-          export RADV_PERFTEST=gpl  
+          export RADV_PERFTEST=gpl
           export MESA_LOADER_DRIVER_OVERRIDE=radeonsi
 
           export mesa_glthread=false
