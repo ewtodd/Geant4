@@ -24,9 +24,8 @@
       g4RadioactiveDecay =
         if patchCf252 then
           pkgs.geant4.data.G4RadioactiveDecay.overrideAttrs (old: {
-            postInstall = (old.postInstall or "") + ''
-              datadir=$(find $out/share -name "G4RadioactiveDecay*" -type d)
-              cat > "$datadir/z98.a252" <<'DECAY'
+            installPhase = old.installPhase + ''
+              cat > $datadir/z98.a252 <<'DECAY'
 # 252CF ( 2.645 Y   )
 #  Excitation  flag   Halflife  Mode    Daughter Ex flag   Intensity          Q
 P            0  - 8.346985e+07
