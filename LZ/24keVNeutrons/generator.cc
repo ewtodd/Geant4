@@ -18,5 +18,7 @@ void PrimaryGenerator::GeneratePrimaries(G4Event *anEvent) {
   G4ParticleDefinition *cf252 = ionTable->GetIon(98, 252, 0.0);
 
   fParticleGun->SetParticleDefinition(cf252);
+  fParticleGun->SetParticleCharge(0.0);
+  fParticleGun->SetParticleEnergy(0.0);
   fParticleGun->GeneratePrimaryVertex(anEvent);
 }
