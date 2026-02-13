@@ -7,8 +7,6 @@
 /run/numberOfThreads 32
 /run/initialize
 
-# Radioactive Decay Module settings
-/process/had/rdm/setRadioactiveDecayFile 98 252 z98.a252_modify.txt
 /process/had/rdm/verbose 0
 
 /run/beamOn 100000 
