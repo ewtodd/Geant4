@@ -3,10 +3,8 @@
 
 #include "G4AnalysisManager.hh"
 #include "G4Event.hh"
-#include "G4Gamma.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UserEventAction.hh"
-#include "Randomize.hh"
 #include "run.hh"
 
 class EventAction : public G4UserEventAction {
@@ -17,10 +15,10 @@ public:
   virtual void BeginOfEventAction(const G4Event *);
   virtual void EndOfEventAction(const G4Event *);
 
-  void AddEdepCdTe(G4double edep);
+  void AddEdepCZT(G4int crystalID, G4double edep);
 
 private:
-  G4double fEdepCdTe;
+  G4double fEdepCZT[4];
 };
 
 #endif

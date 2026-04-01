@@ -4,15 +4,17 @@ import sys
 
 
 def combine_root_files(output_file, input_files):
-    chain = ROOT.TChain("CZT")
-
-    for file_name in input_files:
-        chain.Add(file_name)
     output = ROOT.TFile(output_file, "RECREATE")
 
-    output.cd()
-    tree = chain.CloneTree(-1, "fast")
-    tree.Write()
+    for c in range(4):
+        tree_name = f"CZT_{c}"
+        chain = ROOT.TChain(tree_name)
+        for file_name in input_files:
+            chain.Add(file_name)
+        output.cd()
+        tree = chain.CloneTree(-1, "fast")
+        tree.Write()
+
     output.Close()
     print(f"Combined {len(input_files)} ROOT files into {output_file}")
 

@@ -10,7 +10,7 @@ PrimaryGenerator::~PrimaryGenerator() { delete fParticleGun; }
 
 void PrimaryGenerator::GeneratePrimaries(G4Event *anEvent) {
   fParticleGun->SetParticlePosition(G4ThreeVector(0, 0, 0));
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0, 0, 1));
+  fParticleGun->SetParticleMomentumDirection(G4RandomDirection());
   // just monoenergetic for now
   G4double energy = 0.025 * eV;
   fParticleGun->SetParticleEnergy(energy);
