@@ -1,7 +1,7 @@
 {
   description = "Geant4 environment with ROOT.";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     utils.url = "github:ewtodd/Analysis-Utilities";
   };
@@ -47,6 +47,7 @@
           ];
           shellHook = ''
             export SHELL="${pkgs.bash}/bin/bash"
+            export QT_PLUGIN_PATH="${pkgs.qt5.qtbase.bin}/${pkgs.qt5.qtbase.qtPluginPrefix}"
             ${
               if !isDarwin then
                 ''
@@ -61,7 +62,9 @@
                   export DISPLAY=:0
                 ''
               else
-                ""
+                ''
+                  export QT_QPA_PLATFORM=cocoa
+                ''
             }
             echo "ROOT version: $(root-config --version)"
             echo "Analysis-Utilities: ${analysis-utils}"

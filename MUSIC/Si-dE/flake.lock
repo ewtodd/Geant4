@@ -38,16 +38,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1773814637,
-        "narHash": "sha256-GNU+ooRmrHLfjlMsKdn0prEKVa0faVanm0jrgu1J/gY=",
+        "lastModified": 1777954456,
+        "narHash": "sha256-hGdgeU2Nk87RAuZyYjyDjFL6LK7dAZN5RE9+hrDTkDU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "fea3b367d61c1a6592bc47c72f40a9f3e6a53e96",
+        "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-25.11",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -111,11 +111,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1773842457,
-        "narHash": "sha256-GWjvUzD1RWdjFwFdDdfhga03ajhuUIN/HklnhHqgsYo=",
+        "lastModified": 1778121502,
+        "narHash": "sha256-395f869WMlUIE7zJd3EHpJYnpkUiakLjq1bjDVDrCx4=",
         "owner": "ewtodd",
         "repo": "Analysis-Utilities",
-        "rev": "3ced8d8cb545e83352050be68e6886d9d12a34eb",
+        "rev": "bb031fb74d2261d28b634414687133fb97cceb66",
         "type": "github"
       },
       "original": {
