@@ -22,7 +22,6 @@ const G4double kCdLineEnergy[kNCdLines] = {23.1739 * keV, 22.9843 * keV,
                                            26.095 * keV, 26.644 * keV};
 const G4double kCdLineIntensity[kNCdLines] = {1.0, 0.5317, 0.279, 0.051};
 
-
 G4double PickCdXray() {
   G4double total = 0;
   for (G4int k = 0; k < kNCdLines; k++)
@@ -65,18 +64,21 @@ G4ThreeVector PrimaryGenerator::SurfaceCapturePoint() const {
   if (on_side) {
     G4double phi = CLHEP::twopi * G4UniformRand();
     G4double r = kRadius - depth;
-    return G4ThreeVector(r * std::cos(phi), r * std::sin(phi), (2.0 * G4UniformRand() - 1.0) * kHalfZ);
+    return G4ThreeVector(r * std::cos(phi), r * std::sin(phi),
+                         (2.0 * G4UniformRand() - 1.0) * kHalfZ);
   }
   G4double r = kRadius * std::sqrt(G4UniformRand());
   G4double phi = CLHEP::twopi * G4UniformRand();
   G4double side = (G4UniformRand() < 0.5) ? -1.0 : 1.0;
-  return G4ThreeVector(r * std::cos(phi), r * std::sin(phi), side * (kHalfZ - depth));
+  return G4ThreeVector(r * std::cos(phi), r * std::sin(phi),
+                       side * (kHalfZ - depth));
 }
 
 G4ThreeVector PrimaryGenerator::UniformPoint() const {
   G4double r = kRadius * std::sqrt(G4UniformRand());
   G4double phi = CLHEP::twopi * G4UniformRand();
-  return G4ThreeVector(r * std::cos(phi), r * std::sin(phi), (2.0 * G4UniformRand() - 1.0) * kHalfZ);
+  return G4ThreeVector(r * std::cos(phi), r * std::sin(phi),
+                       (2.0 * G4UniformRand() - 1.0) * kHalfZ);
 }
 
 void PrimaryGenerator::Fire(G4Event *anEvent, G4ParticleDefinition *particle,

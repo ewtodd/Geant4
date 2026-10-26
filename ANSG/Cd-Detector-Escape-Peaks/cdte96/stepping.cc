@@ -20,9 +20,8 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
       detectorConstruction->GetScoringVolumeCZT();
 
   if (volume == fScoringVolumeCZT) {
-    G4int copyNo = step->GetPreStepPoint()
-                       ->GetTouchableHandle()
-                       ->GetCopyNumber();
+    G4int copyNo =
+        step->GetPreStepPoint()->GetTouchableHandle()->GetCopyNumber();
     G4double edep = step->GetTotalEnergyDeposit();
     fEventAction->AddEdepCZT(copyNo, edep);
   }

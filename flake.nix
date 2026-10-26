@@ -94,7 +94,7 @@
           SiLi = geant4Shell { project = "ANSG/Prelim/SiLi"; };
           GeometryOptimizationHPGe = geant4Shell { project = "ANSG/Prelim/GeometryOptimizationHPGe"; };
           # Two applications, czt96/ and cdte96/, each built in its own build/.
-          "73mGe-Escape96" = geant4Shell { project = "ANSG/73mGe-Escape96"; };
+          "Cd-Detector-Escape-Peaks" = geant4Shell { project = "ANSG/Cd-Detector-Escape-Peaks"; };
 
           Cf252ModeratorOptimization = geant4Shell { project = "MDvDM/Cf252ModeratorOptimization"; };
           LaBr3TaggingEfficiency = geant4Shell { project = "MDvDM/LiF/LaBr3TaggingEfficiency"; };
@@ -110,7 +110,7 @@
               echo "Pick a project: nix develop .#<Project>"
               echo "  ANSG:  SiDiode | Post-OSU-Neutron-Activation | DTModeratorOptimization"
               echo "         CZT | CdTe | SiLi | GeometryOptimizationHPGe   (ANSG/Prelim)"
-              echo "         73mGe-Escape96"
+              echo "         Cd-Detector-Escape-Peaks"
               echo "  MDvDM: Cf252ModeratorOptimization | LaBr3TaggingEfficiency | ModeratedCf252LaBr3CeBr3Coincidence"
               echo "  MUSIC: Si-dE"
               echo "  PSI:   Coincidence"

@@ -16,9 +16,9 @@
 <!---->
 - This is an umbrella repo of Geant4 simulations: one flake, one dev shell
   per project, named after the project's directory.
-  - `ANSG/`: `SiDiode`, `Post-OSU-Neutron-Activation`, `DTModeratorOptimization`,
-    `73mGe-Escape96`, and under `ANSG/Prelim/`: `CZT`, `CdTe`, `SiLi`,
-    `GeometryOptimizationHPGe`.
+  - `ANSG/`: `SiDiode`, `Post-OSU-Neutron-Activation`,
+    `DTModeratorOptimization`, `Cd-Detector-Escape-Peaks`, and under
+    `ANSG/Prelim/`: `CZT`, `CdTe`, `SiLi`, `GeometryOptimizationHPGe`.
   - `MDvDM/`: `Cf252ModeratorOptimization`, and under `MDvDM/LiF/`:
     `LaBr3TaggingEfficiency`, `ModeratedCf252LaBr3CeBr3Coincidence`.
   - `MUSIC/`: `Si-dE`. `PSI/`: `Coincidence`.
@@ -30,8 +30,9 @@
 - A project is one Geant4 application: `*.cc`/`*.hh`, `CMakeLists.txt`, and
   its macros. Build it from the project directory with
   `cmake -S . -B build && make -C build -j`, and run `build/sim <macro>`.
-  `73mGe-Escape96` holds two applications, `czt96/` and `cdte96/`, each
-  built in its own `build/`; `run_escape96.sh` builds and runs them.
+  `Cd-Detector-Escape-Peaks` holds two applications, `czt96/` and
+  `cdte96/`, each built in its own `build/`; `run_escape96.sh` builds and
+  runs them.
 - Every sim merges its per-thread outputs at the end of a run: the master's
   `EndOfRunAction` calls `OutputMerger::MergeThreadOutputs` from
   `include/OutputMerger.hh`, which merges `output<run>_t<i>.root` into
@@ -67,7 +68,7 @@
   `/labdata/ANSG/Geant4/Prelim/CZT/`, and each project reaches them through
   the gitignored symlink `macros/root_files`. Move a finished run's
   `output<run>.root` there under a descriptive name.
-- `73mGe-Escape96` writes its runs straight into UM-ANSG's
+- `Cd-Detector-Escape-Peaks` writes its runs straight into UM-ANSG's
   `73mGe/root_files/geant4/<geometry>_<run>/`.
 - Never delete simulation outputs without asking.
 <!---->
