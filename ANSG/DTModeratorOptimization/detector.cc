@@ -26,7 +26,6 @@ G4bool SensitiveDetector::ProcessHits(G4Step *aStep,
       man->FillNtupleDColumn(1, 5, momentum.y());
       man->FillNtupleDColumn(1, 6, momentum.z());
       man->AddNtupleRow(1);
-      man->AddNtupleRow(1);
 
     } else if (fDetectorName == "WrapPre") {
       man->FillNtupleDColumn(0, 0, kineticEnergy);
