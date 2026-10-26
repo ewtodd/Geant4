@@ -24,3 +24,8 @@ build/
 *_cpp.d
 *_cpp_ACLiC_dict_rdict.pcm
 AutoDict_*
+
+# Libraries a project's Makefile builds from its src/ (Analysis-Utilities'
+# template), which the dev shell puts on LD_LIBRARY_PATH
+obj/
+lib/

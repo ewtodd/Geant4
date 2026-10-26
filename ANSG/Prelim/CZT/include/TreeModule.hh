@@ -2,37 +2,35 @@
 #define TREE_MODULE_H_INCLUDED
 
 #include <TBranch.h>
-#include <TDirectory.h>
 #include <TFile.h>
-#include <TH1.h>
-#include <TMath.h>
+#include <TH1D.h>
+#include <TROOT.h>
 #include <TString.h>
 #include <TTree.h>
-#include <iostream>
-#include <random>
 
 class TreeModule {
 private:
   TFile *aFile;
   TFile *broadenedFile;
-  TTree *hitsTree;
   TTree *energyTreeCZT;
   TTree *energyTreeHPGe;
   TTree *energyTreeSiLi;
   TBranch *branchEnergyDepCZT;
   TBranch *branchEnergyDepHPGe;
   TBranch *branchEnergyDepSiLi;
-  const char *aFilename;
+  TString aFilename;
 
-  TH1D *createHistogram(TBranch *branch, const char *histName);
+  TH1D *createHistogram(TBranch *branch, const TString &histName);
   TH1D *broadenedHist(TH1D *hist, const TString detectorName);
-  void writeHistogramToTree(TTree *tree, TH1D *hist, const char *branchName);
+  void writeHistogramToTree(TTree *tree, TH1D *hist, const TString &branchName);
 
 public:
-  TreeModule(const char *filename, const char *broadenedFilename = nullptr);
+  // The broadened trees go to broadenedFilename, by default
+  // <filename without .root>_broadened.root. The input is only read.
+  TreeModule(const TString &filename, const TString &broadenedFilename = "");
   ~TreeModule();
   void broadenAndStoreEnergy();
-  const char *getFilename() { return aFilename; };
+  TString getFilename() const { return aFilename; };
 };
 
 #endif // TREE_MODULE_H_INCLUDED
