@@ -32,5 +32,19 @@ const std::vector<Double_t> PIXEL_CENTERS_Y_MM = {
 
 const TString SIM_5E7 = "5E7";
 
+const Int_t N_CRYSTALS = 4;
+
+// Window of the Cd capture line and its escape peaks. Each spectrum gets its
+// bin count between its own smallest and largest energy in the window, as
+// numpy's bins=N does.
+const Double_t ESCAPE_WINDOW_XMIN_KEV = 50, ESCAPE_WINDOW_XMAX_KEV = 110;
+const Int_t ESCAPE_WINDOW_RAW_NBINS = 10000;
+const Int_t ESCAPE_WINDOW_BROADENED_NBINS = 600;
+
+const Double_t E_CD113_NG_96KEV = 95.902;
+const Double_t E_CD113_NG_75KEV = 75.177;
+const Double_t E_CD_K_EDGE_KEV = 26.7112;
+const Double_t E_CD_K_ALPHA_KEV = 23.1739;
+
 } // namespace Constants
 #endif
