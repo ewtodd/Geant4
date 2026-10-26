@@ -3,7 +3,10 @@
 
 #include "G4AnalysisManager.hh"
 #include "G4Run.hh"
+#include "G4RunManager.hh"
+#include "G4Threading.hh"
 #include "G4UserRunAction.hh"
+#include "OutputMerger.hh"
 
 class RunAction : public G4UserRunAction {
 public:

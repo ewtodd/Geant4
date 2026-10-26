@@ -11,15 +11,23 @@ RunAction::RunAction() {
 }
 RunAction::~RunAction() {}
 void RunAction::BeginOfRunAction(const G4Run *run) {
+  if (IsMaster())
+    OutputMerger::MarkRunStart();
   G4AnalysisManager *man = G4AnalysisManager::Instance();
   G4int runNumber = run->GetRunID();
   std::stringstream strRunID;
   strRunID << runNumber;
   man->OpenFile("output" + strRunID.str() + ".root");
 }
-void RunAction::EndOfRunAction(const G4Run *) {
+void RunAction::EndOfRunAction(const G4Run *run) {
   G4AnalysisManager *man = G4AnalysisManager::Instance();
 
   man->Write();
-  man->CloseFile("output.root");
+  man->CloseFile();
+
+  if (IsMaster() && G4Threading::IsMultithreadedApplication()) {
+    G4int nThreads = G4RunManager::GetRunManager()->GetNumberOfThreads();
+    OutputMerger::MergeThreadOutputs(Form("output%d", run->GetRunID()),
+                                     nThreads);
+  }
 }

@@ -6,6 +6,8 @@ find_package(Geant4 REQUIRED ui_all vis_all)
 find_package(ROOT REQUIRED)
 
 include(${Geant4_USE_FILE})
+# ../../include holds OutputMerger.hh, shared by every sim in the repo.
+include_directories(${ROOT_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/../../include)
 include(${ROOT_USE_FILE})
 
 file(GLOB sources ${PROJECT_SOURCE_DIR}/*.cc)

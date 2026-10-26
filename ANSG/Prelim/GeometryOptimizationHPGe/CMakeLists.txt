@@ -7,12 +7,13 @@ find_package(Geant4 REQUIRED ui_all vis_all)
 # Find ROOT package
 find_package(ROOT REQUIRED COMPONENTS Hist RIO Net)
 
-# Include ROOT directories
-include_directories(${ROOT_INCLUDE_DIRS})
+# ROOT library directory
 link_directories(${ROOT_LIBRARY_DIR})
 
 # Include Geant4 configurations
 include(${Geant4_USE_FILE})
+# ../../../include holds OutputMerger.hh, shared by every sim in the repo.
+include_directories(${ROOT_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/../../../include)
 
 # Source files and header files
 file(GLOB sources ${PROJECT_SOURCE_DIR}/*.cc)
