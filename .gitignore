@@ -13,3 +13,14 @@ build/
 *.pdf
 *.root
 
+
+# Simulation outputs live on /labdata; each project reaches them through
+# this symlink. OutputMerger.hh writes <stem>.root.tmp while merging.
+**/macros/root_files
+*.root.tmp
+
+# ACLiC build products of the analysis macros
+*_cpp.so
+*_cpp.d
+*_cpp_ACLiC_dict_rdict.pcm
+AutoDict_*
