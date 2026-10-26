@@ -9,8 +9,8 @@
 #include <TLine.h>
 #include <TMath.h>
 #include <TPad.h>
-#include <TRandom3.h>
 #include <TROOT.h>
+#include <TRandom3.h>
 #include <TStyle.h>
 #include <TSystem.h>
 #include <TTree.h>
@@ -25,10 +25,10 @@ Double_t CdTeRelativeResolution(Double_t energy_keV) {
   Double_t constant_term = 0.008;
   Double_t statistical_term = 0.012;
   Double_t hole_trapping_term = 0.0015;
-  return TMath::Sqrt(
-      constant_term * constant_term +
-      statistical_term * statistical_term / energy_MeV +
-      hole_trapping_term * hole_trapping_term / (energy_MeV * energy_MeV));
+  return TMath::Sqrt(constant_term * constant_term +
+                     statistical_term * statistical_term / energy_MeV +
+                     hole_trapping_term * hole_trapping_term /
+                         (energy_MeV * energy_MeV));
 }
 
 Double_t BroadenEnergy(Double_t energy_keV, TRandom3 &rng) {
@@ -149,8 +149,8 @@ void PlotEscapeWindow(const std::vector<Double_t> &energies_keV, Int_t n_bins,
 
   Double_t gap_px = 20;
   Double_t legend_box_px = PlottingUtils::LegendWidthPx(line_labels);
-  Int_t legend_width_px = TMath::CeilNint(
-      legend_box_px + 2 * gap_px - 1200 * gStyle->GetPadRightMargin());
+  Int_t legend_width_px = TMath::CeilNint(legend_box_px + 2 * gap_px -
+                                          1200 * gStyle->GetPadRightMargin());
   TPad *plot = nullptr;
   TPad *legend_pad = nullptr;
   TCanvas *canvas = PlottingUtils::GetConfiguredCanvasWithSideLegend(
@@ -171,8 +171,8 @@ void PlotEscapeWindow(const std::vector<Double_t> &energies_keV, Int_t n_bins,
 
   std::vector<TLine *> lines;
   for (Int_t i = 0; i < n_lines; i++) {
-    TLine *line = new TLine(line_energies_keV[i], y_min, line_energies_keV[i],
-                            line_top);
+    TLine *line =
+        new TLine(line_energies_keV[i], y_min, line_energies_keV[i], line_top);
     line->SetLineColor(line_colors[i]);
     line->SetLineStyle(9);
     line->SetLineWidth(PlottingUtils::GetLineWidth() + 1);
@@ -201,7 +201,7 @@ void PlotEscapeWindow(const std::vector<Double_t> &energies_keV, Int_t n_bins,
 // Deposits of the four CZT crystals combined, between 50 and 110 keV, as
 // simulated and broadened, on a log scale with the Cd capture line, its Cd
 // K-edge and K-alpha escape energies, and the 75 keV capture line marked.
-void EnergyDeposition(const TString input_name = Constants::SIM_5E7) {
+void EnergyDeposition(const TString input_name = Constants::SIM_PB) {
   TString macros_dir = gSystem->DirName(__FILE__);
   InitUtils::SetROOTPreferences(PlotSaveFormat::kPNG, macros_dir + "/plots",
                                 macros_dir + "/root_files");

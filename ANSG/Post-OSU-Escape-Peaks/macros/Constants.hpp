@@ -30,7 +30,9 @@ const std::vector<Double_t> PIXEL_CENTERS_Y_MM = {
     3.6330,   5.5230,   7.4550,   9.3450,   11.2350,  13.1670,
     15.0570,  16.9470,  18.8370,  20.7690};
 
-const TString SIM_5E7 = "5E7";
+// The Pb K-alpha2 run of pb.mac; the 5E7 neutron run belongs to
+// Post-OSU-Neutron-Activation.
+const TString SIM_PB = "sim";
 
 const Int_t N_CRYSTALS = 4;
 

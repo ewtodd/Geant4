@@ -110,7 +110,7 @@ void SimHistogram() {
   InitUtils::SetROOTPreferences();
   std::vector<TString> filenames;
 
-  filenames.push_back(Constants::SIM_5E7);
+  filenames.push_back(Constants::SIM_PB);
 
   AddAllHistograms(filenames);
 }
