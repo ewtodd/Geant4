@@ -128,3 +128,10 @@
   that explains what changed and why.
 - Agent commits: `--author="son-of-anton-bot <307402699+son-of-anton-bot@users.noreply.github.com>"`.
 - Stage explicit paths; never `git add .` or `git add -A`.
+- A `pre-commit` hook in `.githooks/` clang-formats staged C/C++ (including
+  Geant4's `.cc`/`.hh`) with `LLVM, BreakStringLiterals: false` and
+  re-stages the result.
+  `BreakStringLiterals` is deliberately off, so do not reformat string
+  literals by hand.
+  Git finds the hook through `core.hooksPath = .githooks`; set it with
+  `git config core.hooksPath .githooks` if your git config does not.
