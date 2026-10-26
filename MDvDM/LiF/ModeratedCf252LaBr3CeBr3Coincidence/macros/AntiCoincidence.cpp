@@ -7,94 +7,28 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TLegend.h>
-#include <TMath.h>
 #include <TROOT.h>
 #include <TRandom3.h>
-#include <algorithm>
 #include <iostream>
 #include <vector>
 
-// Row indices in order of increasing value, as np.argsort.
-std::vector<Long64_t> SortedOrder(const std::vector<Double_t> &values) {
-  Long64_t n_values = values.size();
-  std::vector<Long64_t> order(n_values);
-  for (Long64_t i = 0; i < n_values; i++)
-    order[i] = i;
-  std::sort(order.begin(), order.end(), [&values](Long64_t a, Long64_t b) {
-    return values[a] < values[b];
-  });
-  return order;
-}
-
-// Where time_ns would go in sorted_times_ns, as np.searchsorted: only the
-// times either side of it can be the nearest.
-Long64_t InsertionIndex(Double_t time_ns,
-                        const std::vector<Double_t> &sorted_times_ns) {
-  return std::lower_bound(sorted_times_ns.begin(), sorted_times_ns.end(),
-                          time_ns) -
-         sorted_times_ns.begin();
-}
-
-Bool_t InWindow(Double_t time_ns, Long64_t index,
-                const std::vector<Double_t> &sorted_times_ns) {
-  Long64_t n_times = sorted_times_ns.size();
-  if (index < 0 || index >= n_times)
-    return kFALSE;
-  return TMath::Abs(time_ns - sorted_times_ns[index]) <=
-         Constants::COINCIDENCE_WINDOW_NS;
-}
-
-// The LaBr3 energies whose time has no CeBr3 time within the window. As in the
-// former newplot.py, the CeBr3 times searched are those of every row in the
-// file, not only the LaBr3 row's own event.
+// The broadened LaBr3 energies of the events in which LaBr3 was hit and CeBr3
+// was not hit within the window; n_labr3_events counts the LaBr3 hits.
 std::vector<Double_t>
 AntiCoincidentEnergies(const std::vector<Double_t> &labr3_broadened_mev,
-                       const std::vector<Double_t> &labr3_times_ns,
-                       const std::vector<Double_t> &sorted_cebr3_times_ns) {
+                       const DetectorData &labr3, const DetectorData &cebr3,
+                       Long64_t &n_labr3_events) {
   std::vector<Double_t> anti_coincident_mev;
-  Long64_t n_labr3 = labr3_times_ns.size();
-  for (Long64_t i = 0; i < n_labr3; i++) {
-    Double_t time_ns = labr3_times_ns[i];
-    Long64_t next = InsertionIndex(time_ns, sorted_cebr3_times_ns);
-    Bool_t coincident = InWindow(time_ns, next - 1, sorted_cebr3_times_ns) ||
-                        InWindow(time_ns, next, sorted_cebr3_times_ns);
-    if (!coincident)
+  n_labr3_events = 0;
+  Long64_t n_events = labr3.time_ns.size();
+  for (Long64_t i = 0; i < n_events; i++) {
+    if (!HasHit(labr3.time_ns[i]))
+      continue;
+    n_labr3_events++;
+    if (!CoincidentInEvent(labr3, cebr3, i))
       anti_coincident_mev.push_back(labr3_broadened_mev[i]);
   }
   return anti_coincident_mev;
-}
-
-// The former newplot.py's pairs: each of the MAX_COINCIDENCE_POINTS earliest
-// LaBr3 times with whichever of its two neighbouring CeBr3 times, among all
-// rows, lie within the window.
-Long64_t FillCoincidencePairs(TH2D *coincidences,
-                              const std::vector<Double_t> &labr3_broadened_mev,
-                              const std::vector<Double_t> &cebr3_broadened_mev,
-                              const DetectorData &labr3,
-                              const DetectorData &cebr3) {
-  std::vector<Long64_t> labr3_order = SortedOrder(labr3.time_ns);
-  std::vector<Long64_t> cebr3_order = SortedOrder(cebr3.time_ns);
-  Long64_t n_cebr3 = cebr3_order.size();
-  std::vector<Double_t> sorted_cebr3_times_ns(n_cebr3);
-  for (Long64_t j = 0; j < n_cebr3; j++)
-    sorted_cebr3_times_ns[j] = cebr3.time_ns[cebr3_order[j]];
-
-  Long64_t n_labr3 = labr3_order.size();
-  Long64_t n_points = TMath::Min(n_labr3, Constants::MAX_COINCIDENCE_POINTS);
-  Long64_t n_pairs = 0;
-  for (Long64_t i = 0; i < n_points; i++) {
-    Long64_t labr3_row = labr3_order[i];
-    Double_t time_ns = labr3.time_ns[labr3_row];
-    Long64_t next = InsertionIndex(time_ns, sorted_cebr3_times_ns);
-    for (Long64_t j = next - 1; j <= next; j++) {
-      if (!InWindow(time_ns, j, sorted_cebr3_times_ns))
-        continue;
-      coincidences->Fill(labr3_broadened_mev[labr3_row],
-                         cebr3_broadened_mev[cebr3_order[j]]);
-      n_pairs++;
-    }
-  }
-  return n_pairs;
 }
 
 void SaveComparison(const std::vector<Double_t> &original_mev,
@@ -130,9 +64,9 @@ void SaveComparison(const std::vector<Double_t> &original_mev,
   delete anti_coincident;
 }
 
-// The former newplot.py: the broadened LaBr3 spectrum before and after removing
-// the events with a CeBr3 hit within the window, the time distributions, and
-// the LaBr3 against CeBr3 coincidences.
+// The former newplot.py, matched per event: the broadened LaBr3 spectrum before
+// and after removing the events with a CeBr3 hit within the window, the time
+// distributions, and the LaBr3 against CeBr3 coincidences.
 void AntiCoincidence(TString input_name = Constants::ANTICOINCIDENCE_INPUT) {
   InitUtils::SetROOTPreferences();
 
@@ -147,6 +81,12 @@ void AntiCoincidence(TString input_name = Constants::ANTICOINCIDENCE_INPUT) {
   delete file;
   if (!loaded)
     return;
+  if (labr3.time_ns.size() != cebr3.time_ns.size()) {
+    std::cerr << "Error: the LaBr3 and CeBr3 trees of " << input_name
+              << " differ in length, so their rows are not events"
+              << std::endl;
+    return;
+  }
   std::cout << "Loaded " << labr3.energy_mev.size() << " LaBr3 events and "
             << cebr3.energy_mev.size() << " CeBr3 events" << std::endl;
 
@@ -162,13 +102,12 @@ void AntiCoincidence(TString input_name = Constants::ANTICOINCIDENCE_INPUT) {
                "Total_Energy_Deposition_in_LaBr3_with_broadening",
                Constants::ANTICOINCIDENCE_PLOTS);
 
-  std::vector<Double_t> sorted_cebr3_times_ns(cebr3.time_ns);
-  std::sort(sorted_cebr3_times_ns.begin(), sorted_cebr3_times_ns.end());
+  Long64_t n_labr3_events = 0;
   std::vector<Double_t> anti_coincident_mev = AntiCoincidentEnergies(
-      labr3_broadened_mev, labr3.time_ns, sorted_cebr3_times_ns);
+      labr3_broadened_mev, labr3, cebr3, n_labr3_events);
   std::cout << "Found " << anti_coincident_mev.size()
-            << " anti-coincidence events out of "
-            << labr3_broadened_mev.size() << " total events" << std::endl;
+            << " anti-coincidence events out of " << n_labr3_events
+            << " events with a LaBr3 hit" << std::endl;
 
   SaveSpectrum(anti_coincident_mev, Constants::COINCIDENCE_SPECTRUM_NBINS,
                Constants::COINCIDENCE_SPECTRUM_XMIN_MEV,
@@ -193,9 +132,9 @@ void AntiCoincidence(TString input_name = Constants::ANTICOINCIDENCE_INPUT) {
                        Constants::ANTICOINCIDENCE_PLOTS);
 
   TH2D *coincidences = NewCoincidenceHistogram();
-  Long64_t n_pairs = FillCoincidencePairs(
+  Long64_t n_coincident = FillEventCoincidences(
       coincidences, labr3_broadened_mev, cebr3_broadened_mev, labr3, cebr3);
-  if (n_pairs > 0)
+  if (n_coincident > 0)
     SaveCoincidenceHistogram(coincidences, Constants::ANTICOINCIDENCE_PLOTS);
   else
     std::cout << "No coincident events found for LaBr3_vs_CeBr3_Coincidence"

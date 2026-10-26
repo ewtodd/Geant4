@@ -39,8 +39,6 @@ const Int_t COINCIDENCE_2D_NBINS = 100;
 const Double_t COINCIDENCE_2D_XMIN_MEV = 0.05;
 const Double_t COINCIDENCE_2D_XMAX_MEV = 2.5;
 const Double_t COINCIDENCE_WINDOW_NS = 0.1;
-// The former newplot.py paired only the earliest LaBr3 times with CeBr3 ones.
-const Long64_t MAX_COINCIDENCE_POINTS = 10000;
 
 // LaBr3(Ce) 1.5"x1.5": sigma/E = sqrt(a^2 + b^2/E + c^2/E^2), E in MeV,
 // matching 2.9% FWHM at 662 keV, 2.1% at 1332 keV and 1.6% at 2615 keV.

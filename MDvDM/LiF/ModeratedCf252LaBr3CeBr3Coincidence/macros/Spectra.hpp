@@ -173,6 +173,36 @@ inline void SaveTimeDistribution(const std::vector<Double_t> &times_ns,
   delete distribution;
 }
 
+// The sim records a first-hit time of -1 ns for a detector with no deposit.
+inline Bool_t HasHit(Double_t time_ns) { return time_ns >= 0; }
+
+// Event row i is a coincidence when both detectors were hit and their
+// first-hit times lie within the window.
+inline Bool_t CoincidentInEvent(const DetectorData &labr3,
+                                const DetectorData &cebr3, Long64_t i) {
+  return HasHit(labr3.time_ns[i]) && HasHit(cebr3.time_ns[i]) &&
+         TMath::Abs(labr3.time_ns[i] - cebr3.time_ns[i]) <=
+             Constants::COINCIDENCE_WINDOW_NS;
+}
+
+// Broadened LaBr3 against CeBr3 energy of every coincident event; returns
+// how many there were.
+inline Long64_t
+FillEventCoincidences(TH2D *coincidences,
+                      const std::vector<Double_t> &labr3_broadened_mev,
+                      const std::vector<Double_t> &cebr3_broadened_mev,
+                      const DetectorData &labr3, const DetectorData &cebr3) {
+  Long64_t n_coincident = 0;
+  Long64_t n_events = labr3.time_ns.size();
+  for (Long64_t i = 0; i < n_events; i++) {
+    if (!CoincidentInEvent(labr3, cebr3, i))
+      continue;
+    coincidences->Fill(labr3_broadened_mev[i], cebr3_broadened_mev[i]);
+    n_coincident++;
+  }
+  return n_coincident;
+}
+
 inline TH2D *NewCoincidenceHistogram() {
   return new TH2D(PlottingUtils::GetRandomName(), "",
                   Constants::COINCIDENCE_2D_NBINS,

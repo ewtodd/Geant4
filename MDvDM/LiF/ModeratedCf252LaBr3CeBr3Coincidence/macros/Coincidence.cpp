@@ -4,7 +4,6 @@
 #include "Spectra.hpp"
 #include <TFile.h>
 #include <TH2D.h>
-#include <TMath.h>
 #include <TROOT.h>
 #include <TRandom3.h>
 #include <iostream>
@@ -45,12 +44,8 @@ void PlotEventCoincidences(const std::vector<Double_t> &labr3_broadened_mev,
                            const DetectorData &labr3,
                            const DetectorData &cebr3) {
   TH2D *coincidences = NewCoincidenceHistogram();
-  Long64_t n_events = labr3.time_ns.size();
-  for (Long64_t i = 0; i < n_events; i++) {
-    if (TMath::Abs(labr3.time_ns[i] - cebr3.time_ns[i]) <=
-        Constants::COINCIDENCE_WINDOW_NS)
-      coincidences->Fill(labr3_broadened_mev[i], cebr3_broadened_mev[i]);
-  }
+  FillEventCoincidences(coincidences, labr3_broadened_mev, cebr3_broadened_mev,
+                        labr3, cebr3);
   SaveCoincidenceHistogram(coincidences, Constants::COINCIDENCE_PLOTS);
   delete coincidences;
 }
