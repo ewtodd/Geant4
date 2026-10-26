@@ -5,6 +5,7 @@
 #include <TH1F.h>
 #include <TParameter.h>
 #include <TROOT.h>
+#include <TSystem.h>
 #include <TTree.h>
 
 void AddHistogram(TString filename) {
@@ -107,7 +108,9 @@ void AddAllHistograms(std::vector<TString> filenames) {
 }
 
 void SimHistogram() {
-  InitUtils::SetROOTPreferences();
+  TString macros_dir = gSystem->DirName(__FILE__);
+  InitUtils::SetROOTPreferences(PlotSaveFormat::kPNG, macros_dir + "/plots",
+                                macros_dir + "/root_files");
   std::vector<TString> filenames;
 
   filenames.push_back(Constants::SIM_PB);

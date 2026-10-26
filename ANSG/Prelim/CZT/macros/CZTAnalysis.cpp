@@ -2,6 +2,7 @@
 #include "Constants.hpp"
 #include "InitUtils.hpp"
 #include <TROOT.h>
+#include <TSystem.h>
 #include <vector>
 
 // Built from ../src by the Makefile in the project root; the CZT dev shell
@@ -15,7 +16,9 @@ void CZTAnalysis(
     const std::vector<TString> input_names = Constants::SIM_NAMES,
     const std::vector<TString> measurement_times = Constants::MEASUREMENT_TIMES,
     const TString broadened_directory = "", Bool_t broaden = kTRUE) {
-  InitUtils::SetROOTPreferences();
+  TString macros_dir = gSystem->DirName(__FILE__);
+  InitUtils::SetROOTPreferences(PlotSaveFormat::kPNG, macros_dir + "/plots",
+                                macros_dir + "/root_files");
 
   Analysis *analysis =
       new Analysis(input_names, measurement_times, broadened_directory);

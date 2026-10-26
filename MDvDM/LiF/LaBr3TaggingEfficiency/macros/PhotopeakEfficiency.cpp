@@ -15,6 +15,7 @@
 #include <TPad.h>
 #include <TROOT.h>
 #include <TRandom3.h>
+#include <TSystem.h>
 #include <TTree.h>
 #include <iostream>
 #include <vector>
@@ -88,9 +89,8 @@ Bool_t FillSpectra(TFile *file, TH1D *raw, TH1D *raw_zoomed, TH1D *broadened,
 
 void SaveSpectrum(TH1D *spectrum, const TString &output_name) {
   TCanvas *canvas = PlottingUtils::GetConfiguredCanvas();
-  PlottingUtils::ConfigureHistogram(spectrum, kRed,
-                                    ";Energy Deposited [MeV];" +
-                                        CountsPerBinTitle(spectrum));
+  PlottingUtils::ConfigureHistogram(
+      spectrum, kRed, ";Energy Deposited [MeV];" + CountsPerBinTitle(spectrum));
   spectrum->SetFillColorAlpha(kRed, 0.5);
   spectrum->SetFillStyle(1001);
   spectrum->Draw("HIST");
@@ -226,13 +226,13 @@ PhotopeakCounts FitPhotopeak(TH1D *peak_hist) {
     }
     min_content = TMath::Min(min_content, content);
   }
-  Double_t sigma_guess_mev =
-      LaBr3RelativeFWHM(Constants::PEAK_ENERGY_MEV) *
-      Constants::PEAK_ENERGY_MEV / Constants::FWHM_PER_SIGMA;
+  Double_t sigma_guess_mev = LaBr3RelativeFWHM(Constants::PEAK_ENERGY_MEV) *
+                             Constants::PEAK_ENERGY_MEV /
+                             Constants::FWHM_PER_SIGMA;
 
-  TF1 *model = new TF1("photopeak_model",
-                       "[0]*exp(-0.5*((x-[1])/[2])^2) + [3]*x + [4]",
-                       Constants::FIT_XMIN_MEV, Constants::FIT_XMAX_MEV);
+  TF1 *model =
+      new TF1("photopeak_model", "[0]*exp(-0.5*((x-[1])/[2])^2) + [3]*x + [4]",
+              Constants::FIT_XMIN_MEV, Constants::FIT_XMAX_MEV);
   model->SetParNames("Amplitude", "Centroid", "Sigma", "Slope", "Intercept");
   model->SetParameters(max_content - min_content, max_center_mev,
                        sigma_guess_mev, 0, min_content);
@@ -272,11 +272,11 @@ PhotopeakCounts FitPhotopeak(TH1D *peak_hist) {
     result.counts =
         photopeak->Integral(Constants::FIT_XMIN_MEV, Constants::FIT_XMAX_MEV) /
         bin_width_mev;
-    result.counts_error =
-        photopeak->IntegralError(
-            Constants::FIT_XMIN_MEV, Constants::FIT_XMAX_MEV,
-            photopeak->GetParameters(), peak_covariance.data()) /
-        bin_width_mev;
+    result.counts_error = photopeak->IntegralError(Constants::FIT_XMIN_MEV,
+                                                   Constants::FIT_XMAX_MEV,
+                                                   photopeak->GetParameters(),
+                                                   peak_covariance.data()) /
+                          bin_width_mev;
   }
 
   delete model;
@@ -313,7 +313,9 @@ Long64_t CountPeakGammas(TFile *file) {
 // and the photopeak efficiency at 2 MeV: the fitted photopeak counts over the
 // 2 MeV gammas leaving the LiF.
 void PhotopeakEfficiency(TString input_name = Constants::DEFAULT_INPUT) {
-  InitUtils::SetROOTPreferences();
+  TString macros_dir = gSystem->DirName(__FILE__);
+  InitUtils::SetROOTPreferences(PlotSaveFormat::kPNG, macros_dir + "/plots",
+                                macros_dir + "/root_files");
 
   TFile *file = IO::OpenForReading(input_name + ".root");
   if (file->IsZombie()) {
@@ -322,21 +324,21 @@ void PhotopeakEfficiency(TString input_name = Constants::DEFAULT_INPUT) {
     return;
   }
 
-  TH1D *raw = NewSpectrum(Constants::SPECTRUM_NBINS,
-                          Constants::SPECTRUM_XMIN_MEV,
-                          Constants::SPECTRUM_XMAX_MEV);
+  TH1D *raw =
+      NewSpectrum(Constants::SPECTRUM_NBINS, Constants::SPECTRUM_XMIN_MEV,
+                  Constants::SPECTRUM_XMAX_MEV);
   TH1D *raw_zoomed =
       NewSpectrum(Constants::ZOOMED_NBINS, Constants::ZOOMED_XMIN_MEV,
                   Constants::ZOOMED_XMAX_MEV);
-  TH1D *broadened = NewSpectrum(Constants::SPECTRUM_NBINS,
-                                Constants::SPECTRUM_XMIN_MEV,
-                                Constants::SPECTRUM_XMAX_MEV);
+  TH1D *broadened =
+      NewSpectrum(Constants::SPECTRUM_NBINS, Constants::SPECTRUM_XMIN_MEV,
+                  Constants::SPECTRUM_XMAX_MEV);
   TH1D *broadened_zoomed =
       NewSpectrum(Constants::ZOOMED_NBINS, Constants::ZOOMED_XMIN_MEV,
                   Constants::ZOOMED_XMAX_MEV);
-  TH1D *peak = NewSpectrum(Constants::PEAK_HIST_NBINS,
-                           Constants::PEAK_HIST_XMIN_MEV,
-                           Constants::PEAK_HIST_XMAX_MEV);
+  TH1D *peak =
+      NewSpectrum(Constants::PEAK_HIST_NBINS, Constants::PEAK_HIST_XMIN_MEV,
+                  Constants::PEAK_HIST_XMAX_MEV);
 
   if (FillSpectra(file, raw, raw_zoomed, broadened, broadened_zoomed, peak)) {
     SaveSpectrum(raw, "Total_Energy_Deposition_in_LaBr3");
@@ -354,14 +356,13 @@ void PhotopeakEfficiency(TString input_name = Constants::DEFAULT_INPUT) {
           100 * photopeak.counts_error / n_peak_gammas;
       std::cout << Form("LaBr3: Fitted counts = %.2f +/- %.2f, 2 MeV gammas "
                         "= %lld, Photopeak Efficiency (%%) = %.4f +/- %.4f",
-                        photopeak.counts, photopeak.counts_error,
-                        n_peak_gammas, efficiency_percent,
-                        efficiency_percent_error)
+                        photopeak.counts, photopeak.counts_error, n_peak_gammas,
+                        efficiency_percent, efficiency_percent_error)
                 << std::endl;
     } else {
       std::cerr << "Error: no photopeak efficiency (fit valid: "
-                << photopeak.valid << ", 2 MeV gammas: " << n_peak_gammas
-                << ")" << std::endl;
+                << photopeak.valid << ", 2 MeV gammas: " << n_peak_gammas << ")"
+                << std::endl;
     }
   }
 

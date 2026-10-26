@@ -9,6 +9,7 @@
 #include <TLegend.h>
 #include <TMath.h>
 #include <TROOT.h>
+#include <TSystem.h>
 #include <TTree.h>
 #include <vector>
 
@@ -72,8 +73,7 @@ ThermalCounts CountThermalNeutrons(const TString input_prefix,
 
     std::cout << material << " File: " << name << ".root" << std::endl;
     std::cout << "  Total entries: " << n_entries << std::endl;
-    std::cout << "  Number of thermal neutrons: " << thermal_count
-              << std::endl;
+    std::cout << "  Number of thermal neutrons: " << thermal_count << std::endl;
     std::cout << "  Normalized number of thermal neutrons: " << scaled_count
               << std::endl;
   }
@@ -212,9 +212,8 @@ void PlotThermalSpectra(TH1D *water_spectrum, TH1D *poly_spectrum) {
   PlottingUtils::ConfigureHistogram(water_spectrum, kBlue, title);
   PlottingUtils::ConfigureHistogram(poly_spectrum, kRed, title);
   // So that neither spectrum is clipped by the other's frame.
-  water_spectrum->SetMaximum(
-      1.05 * TMath::Max(water_spectrum->GetMaximum(),
-                        poly_spectrum->GetMaximum()));
+  water_spectrum->SetMaximum(1.05 * TMath::Max(water_spectrum->GetMaximum(),
+                                               poly_spectrum->GetMaximum()));
   water_spectrum->Draw("HIST");
   poly_spectrum->Draw("HIST SAME");
 
@@ -236,7 +235,9 @@ void PlotThermalSpectra(TH1D *water_spectrum, TH1D *poly_spectrum) {
 void AnalyzeAndPlotSpectra(
     const TString input_prefix = "",
     const TString spectra_output_name = Constants::THERMAL_SPECTRA_OUTPUT) {
-  InitUtils::SetROOTPreferences();
+  TString macros_dir = gSystem->DirName(__FILE__);
+  InitUtils::SetROOTPreferences(PlotSaveFormat::kPNG, macros_dir + "/plots",
+                                macros_dir + "/root_files");
 
   ThermalCounts water = CountThermalNeutrons(input_prefix, Constants::WATER);
   ThermalCounts poly = CountThermalNeutrons(input_prefix, Constants::POLY);

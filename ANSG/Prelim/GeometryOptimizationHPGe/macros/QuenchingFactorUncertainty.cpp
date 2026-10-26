@@ -13,6 +13,7 @@
 #include <TObjArray.h>
 #include <TROOT.h>
 #include <TStyle.h>
+#include <TSystem.h>
 #include <iomanip>
 #include <vector>
 
@@ -120,10 +121,12 @@ void DrawLabelledContour(TH2D *hist, TCanvas *canvas, Double_t level,
 
   // TLatex rotates in pixels, so the slope is taken in pixels too.
   Double_t pixels_per_x =
-      canvas->GetWw() * (1 - canvas->GetLeftMargin() - canvas->GetRightMargin()) /
+      canvas->GetWw() *
+      (1 - canvas->GetLeftMargin() - canvas->GetRightMargin()) /
       (canvas->GetUxmax() - canvas->GetUxmin());
   Double_t pixels_per_y =
-      canvas->GetWh() * (1 - canvas->GetTopMargin() - canvas->GetBottomMargin()) /
+      canvas->GetWh() *
+      (1 - canvas->GetTopMargin() - canvas->GetBottomMargin()) /
       (canvas->GetUymax() - canvas->GetUymin());
   Double_t dx_pixels =
       (longest->GetX()[after] - longest->GetX()[before]) * pixels_per_x;
@@ -135,8 +138,8 @@ void DrawLabelledContour(TH2D *hist, TCanvas *canvas, Double_t level,
   if (angle < -90)
     angle += 180;
 
-  TLatex *text = new TLatex(longest->GetX()[index], longest->GetY()[index],
-                            label);
+  TLatex *text =
+      new TLatex(longest->GetX()[index], longest->GetY()[index], label);
   text->SetTextAlign(21);
   text->SetTextAngle(angle);
   text->SetTextColor(kWhite);
@@ -161,16 +164,16 @@ void DrawLinearMap(TH2D *map, TCanvas *canvas, const TString title) {
 
 void PlotIonizationYieldMap() {
   Int_t n_points = Constants::YIELD_MAP_N_POINTS;
-  TH2D *yield_map = CreateGridHistogram(
-      n_points, Constants::YIELD_MAP_E_GAMMA_MIN_KEV,
-      Constants::YIELD_MAP_E_GAMMA_MAX_KEV, n_points,
-      Constants::YIELD_MAP_E_GAMMA_NR_MIN_KEV,
-      Constants::YIELD_MAP_E_GAMMA_NR_MAX_KEV);
+  TH2D *yield_map =
+      CreateGridHistogram(n_points, Constants::YIELD_MAP_E_GAMMA_MIN_KEV,
+                          Constants::YIELD_MAP_E_GAMMA_MAX_KEV, n_points,
+                          Constants::YIELD_MAP_E_GAMMA_NR_MIN_KEV,
+                          Constants::YIELD_MAP_E_GAMMA_NR_MAX_KEV);
 
   for (Int_t i = 0; i < n_points; i++) {
-    Double_t e_gamma_nr = GridPoint(i, n_points,
-                                    Constants::YIELD_MAP_E_GAMMA_NR_MIN_KEV,
-                                    Constants::YIELD_MAP_E_GAMMA_NR_MAX_KEV);
+    Double_t e_gamma_nr =
+        GridPoint(i, n_points, Constants::YIELD_MAP_E_GAMMA_NR_MIN_KEV,
+                  Constants::YIELD_MAP_E_GAMMA_NR_MAX_KEV);
     for (Int_t j = 0; j < n_points; j++) {
       Double_t e_gamma =
           GridPoint(j, n_points, Constants::YIELD_MAP_E_GAMMA_MIN_KEV,
@@ -188,8 +191,7 @@ void PlotIonizationYieldMap() {
                 "; E_{#gamma} [keV]; E_{#gammanr} [keV]; Ionization Yield [%]");
 
   DrawLabelledContour(yield_map, canvas, Constants::YIELD_CONTOUR_PERCENT,
-                      Form("%.1f%%", Constants::YIELD_CONTOUR_PERCENT),
-                      68.715);
+                      Form("%.1f%%", Constants::YIELD_CONTOUR_PERCENT), 68.715);
 
   std::vector<Int_t> colors;
   colors.push_back(TColor::GetColor("#ffc0cb"));
@@ -217,11 +219,11 @@ void PlotIonizationYieldMap() {
 
 void PlotGammaContributionMap() {
   Int_t n_points = Constants::CONTRIBUTION_MAP_N_POINTS;
-  TH2D *contribution_map = CreateGridHistogram(
-      n_points, Constants::CONTRIBUTION_MAP_E_GAMMA_MIN_KEV,
-      Constants::CONTRIBUTION_MAP_E_GAMMA_MAX_KEV, n_points,
-      Constants::CONTRIBUTION_MAP_SIGMA_E_GAMMA_MIN_KEV,
-      Constants::CONTRIBUTION_MAP_SIGMA_E_GAMMA_MAX_KEV);
+  TH2D *contribution_map =
+      CreateGridHistogram(n_points, Constants::CONTRIBUTION_MAP_E_GAMMA_MIN_KEV,
+                          Constants::CONTRIBUTION_MAP_E_GAMMA_MAX_KEV, n_points,
+                          Constants::CONTRIBUTION_MAP_SIGMA_E_GAMMA_MIN_KEV,
+                          Constants::CONTRIBUTION_MAP_SIGMA_E_GAMMA_MAX_KEV);
 
   for (Int_t i = 0; i < n_points; i++) {
     Double_t e_gamma =
@@ -241,14 +243,14 @@ void PlotGammaContributionMap() {
   }
 
   TCanvas *canvas = PlottingUtils::GetConfiguredCanvas();
-  DrawLinearMap(contribution_map, canvas,
-                "Contribution of E_{#gamma} to total uncertainty; "
-                "E_{#gamma} [keV]; #sigma_{E_{#gamma}} [keV]; Contribution [%]");
+  DrawLinearMap(
+      contribution_map, canvas,
+      "Contribution of E_{#gamma} to total uncertainty; "
+      "E_{#gamma} [keV]; #sigma_{E_{#gamma}} [keV]; Contribution [%]");
 
-  DrawLabelledContour(contribution_map, canvas,
-                      Constants::CONTRIBUTION_CONTOUR_PERCENT,
-                      Form("%.0f%%", Constants::CONTRIBUTION_CONTOUR_PERCENT),
-                      68.745);
+  DrawLabelledContour(
+      contribution_map, canvas, Constants::CONTRIBUTION_CONTOUR_PERCENT,
+      Form("%.0f%%", Constants::CONTRIBUTION_CONTOUR_PERCENT), 68.745);
 
   TGraph *iaea = new TGraph(1);
   iaea->SetPoint(0, Constants::IAEA_E_GAMMA_KEV,
@@ -278,8 +280,8 @@ void PrintMeasuredQuenchingFactors() {
     Measurement measurement = Constants::MEASUREMENTS.at(i);
     QuenchingFactor qf = CalculateQuenchingFactor(
         measurement.e_gamma_nr_keV, measurement.e_gamma_nr_error_keV,
-        Constants::E_NR_KEV, Constants::SIGMA_E_NR_KEV,
-        measurement.e_gamma_keV, measurement.e_gamma_error_keV);
+        Constants::E_NR_KEV, Constants::SIGMA_E_NR_KEV, measurement.e_gamma_keV,
+        measurement.e_gamma_error_keV);
     std::cout << "  " << measurement.label << ": " << std::fixed
               << std::setprecision(1) << qf.yield_percent << " +/- "
               << qf.uncertainty_percent << " %" << std::endl;
@@ -295,7 +297,9 @@ void PrintMeasuredQuenchingFactors() {
 }
 
 void QuenchingFactorUncertainty() {
-  InitUtils::SetROOTPreferences();
+  TString macros_dir = gSystem->DirName(__FILE__);
+  InitUtils::SetROOTPreferences(PlotSaveFormat::kPNG, macros_dir + "/plots",
+                                macros_dir + "/root_files");
   PlotIonizationYieldMap();
   PlotGammaContributionMap();
   PrintMeasuredQuenchingFactors();

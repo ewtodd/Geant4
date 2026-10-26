@@ -68,7 +68,9 @@ TTree *GetTree(TFile *file, const TString tree_name) {
 }
 
 void CoincidenceSpectra(const TString input_name = Constants::SIM_1E8) {
-  InitUtils::SetROOTPreferences();
+  TString macros_dir = gSystem->DirName(__FILE__);
+  InitUtils::SetROOTPreferences(PlotSaveFormat::kPNG, macros_dir + "/plots",
+                                macros_dir + "/root_files");
 
   TFile *file = IO::OpenForReading(input_name + ".root");
   if (file->IsZombie()) {
@@ -122,8 +124,8 @@ void CoincidenceSpectra(const TString input_name = Constants::SIM_1E8) {
     cdte_tree->GetEntry(i);
     nai_tree->GetEntry(i);
 
-    Double_t cdte_keV = BroadenEnergy(cdte_edep_MeV * 1000,
-                                      Constants::CDTE_RESOLUTION, random);
+    Double_t cdte_keV =
+        BroadenEnergy(cdte_edep_MeV * 1000, Constants::CDTE_RESOLUTION, random);
     Double_t nai_keV = BroadenEnergy(nai_edep_MeV * 1000,
                                      Constants::NAI_3X3_RESOLUTION, random);
 

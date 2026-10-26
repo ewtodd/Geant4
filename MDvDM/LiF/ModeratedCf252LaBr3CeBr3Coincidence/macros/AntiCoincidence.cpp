@@ -9,6 +9,7 @@
 #include <TLegend.h>
 #include <TROOT.h>
 #include <TRandom3.h>
+#include <TSystem.h>
 #include <iostream>
 #include <vector>
 
@@ -40,9 +41,8 @@ void SaveComparison(const std::vector<Double_t> &original_mev,
       FillSpectrum(anti_coincident_mev, nbins, xmin_mev, xmax_mev);
 
   TCanvas *canvas = PlottingUtils::GetConfiguredCanvas();
-  PlottingUtils::ConfigureHistogram(original, kRed,
-                                    ";Energy Deposited [MeV];" +
-                                        CountsPerBinTitle(original));
+  PlottingUtils::ConfigureHistogram(
+      original, kRed, ";Energy Deposited [MeV];" + CountsPerBinTitle(original));
   PlottingUtils::ConfigureHistogram(anti_coincident, kBlue);
   original->Draw("HIST");
   anti_coincident->Draw("HIST SAME");
@@ -68,7 +68,9 @@ void SaveComparison(const std::vector<Double_t> &original_mev,
 // and after removing the events with a CeBr3 hit within the window, the time
 // distributions, and the LaBr3 against CeBr3 coincidences.
 void AntiCoincidence(TString input_name = Constants::ANTICOINCIDENCE_INPUT) {
-  InitUtils::SetROOTPreferences();
+  TString macros_dir = gSystem->DirName(__FILE__);
+  InitUtils::SetROOTPreferences(PlotSaveFormat::kPNG, macros_dir + "/plots",
+                                macros_dir + "/root_files");
 
   TFile *file = OpenInput(input_name);
   if (!file)
@@ -83,8 +85,7 @@ void AntiCoincidence(TString input_name = Constants::ANTICOINCIDENCE_INPUT) {
     return;
   if (labr3.time_ns.size() != cebr3.time_ns.size()) {
     std::cerr << "Error: the LaBr3 and CeBr3 trees of " << input_name
-              << " differ in length, so their rows are not events"
-              << std::endl;
+              << " differ in length, so their rows are not events" << std::endl;
     return;
   }
   std::cout << "Loaded " << labr3.energy_mev.size() << " LaBr3 events and "
@@ -103,8 +104,8 @@ void AntiCoincidence(TString input_name = Constants::ANTICOINCIDENCE_INPUT) {
                Constants::ANTICOINCIDENCE_PLOTS);
 
   Long64_t n_labr3_events = 0;
-  std::vector<Double_t> anti_coincident_mev = AntiCoincidentEnergies(
-      labr3_broadened_mev, labr3, cebr3, n_labr3_events);
+  std::vector<Double_t> anti_coincident_mev =
+      AntiCoincidentEnergies(labr3_broadened_mev, labr3, cebr3, n_labr3_events);
   std::cout << "Found " << anti_coincident_mev.size()
             << " anti-coincidence events out of " << n_labr3_events
             << " events with a LaBr3 hit" << std::endl;
@@ -122,7 +123,8 @@ void AntiCoincidence(TString input_name = Constants::ANTICOINCIDENCE_INPUT) {
                  "LaBr3_Spectrum_Comparison");
   SaveComparison(labr3_broadened_mev, anti_coincident_mev,
                  Constants::ZOOMED_NBINS, Constants::ZOOMED_XMIN_MEV,
-                 Constants::ZOOMED_XMAX_MEV, "LaBr3_Spectrum_Comparison_zoomed");
+                 Constants::ZOOMED_XMAX_MEV,
+                 "LaBr3_Spectrum_Comparison_zoomed");
 
   SaveTimeDistribution(labr3.time_ns, "LaBr3 Time Distribution",
                        "LaBr3_Time_Distribution_coincidence_data",

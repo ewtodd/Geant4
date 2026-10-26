@@ -6,6 +6,7 @@
 #include <TLegend.h>
 #include <TMath.h>
 #include <TROOT.h>
+#include <TSystem.h>
 #include <vector>
 
 Double_t WattProbability(Double_t energy_mev) {
@@ -15,7 +16,9 @@ Double_t WattProbability(Double_t energy_mev) {
 
 // The analytic Cf-252 Watt fission spectrum, normalised to its maximum.
 void WattSpectrum() {
-  InitUtils::SetROOTPreferences();
+  TString macros_dir = gSystem->DirName(__FILE__);
+  InitUtils::SetROOTPreferences(PlotSaveFormat::kPNG, macros_dir + "/plots",
+                                macros_dir + "/root_files");
 
   std::vector<Double_t> energies_mev(Constants::WATT_NPOINTS);
   std::vector<Double_t> probabilities(Constants::WATT_NPOINTS);
@@ -47,8 +50,8 @@ void WattSpectrum() {
 
   TCanvas *canvas = PlottingUtils::GetConfiguredCanvas();
   canvas->SetLogx(kTRUE);
-  PlottingUtils::ConfigureGraph(
-      area, kRed, ";Neutron Energy [MeV];Normalized Probability");
+  PlottingUtils::ConfigureGraph(area, kRed,
+                                ";Neutron Energy [MeV];Normalized Probability");
   area->SetFillColorAlpha(kRed, 0.5);
   area->GetXaxis()->SetLimits(energy_min_mev, energy_max_mev);
   area->SetMinimum(0);
@@ -62,8 +65,8 @@ void WattSpectrum() {
   std::vector<TString> labels = {label};
   Double_t legend_width =
       PlottingUtils::LegendWidthPx(labels) / canvas->GetWw();
-  TLegend *legend = PlottingUtils::AddLegend(0.18, 0.18 + legend_width, 0.78,
-                                             0.86);
+  TLegend *legend =
+      PlottingUtils::AddLegend(0.18, 0.18 + legend_width, 0.78, 0.86);
   legend->AddEntry(curve, label, "l");
   PlottingUtils::AddText(Constants::ANSG_LABEL, Constants::ANSG_LABEL_X,
                          Constants::ANSG_LABEL_Y);

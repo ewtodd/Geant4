@@ -6,22 +6,23 @@
 #include <TH2D.h>
 #include <TROOT.h>
 #include <TRandom3.h>
+#include <TSystem.h>
 #include <iostream>
 #include <vector>
 
 void PlotLaBr3Spectra(const std::vector<Double_t> &raw_mev,
                       const std::vector<Double_t> &broadened_mev) {
-  SaveSpectrum(raw_mev, Constants::SPECTRUM_NBINS,
-               Constants::SPECTRUM_XMIN_MEV, Constants::SPECTRUM_XMAX_MEV,
-               kRed, "Total_Energy_Deposition_in_LaBr3",
+  SaveSpectrum(raw_mev, Constants::SPECTRUM_NBINS, Constants::SPECTRUM_XMIN_MEV,
+               Constants::SPECTRUM_XMAX_MEV, kRed,
+               "Total_Energy_Deposition_in_LaBr3",
                Constants::COINCIDENCE_PLOTS);
   SaveSpectrum(raw_mev, Constants::ZOOMED_NBINS, Constants::ZOOMED_XMIN_MEV,
                Constants::ZOOMED_XMAX_MEV, kRed,
                "Total_Energy_Deposition_in_LaBr3_zoomed",
                Constants::COINCIDENCE_PLOTS);
   SaveSpectrum(broadened_mev, Constants::SPECTRUM_NBINS,
-               Constants::SPECTRUM_XMIN_MEV, Constants::SPECTRUM_XMAX_MEV,
-               kRed, "Total_Energy_Deposition_in_LaBr3_with_broadening",
+               Constants::SPECTRUM_XMIN_MEV, Constants::SPECTRUM_XMAX_MEV, kRed,
+               "Total_Energy_Deposition_in_LaBr3_with_broadening",
                Constants::COINCIDENCE_PLOTS);
   SaveSpectrum(broadened_mev, Constants::ZOOMED_NBINS,
                Constants::ZOOMED_XMIN_MEV, Constants::ZOOMED_XMAX_MEV, kRed,
@@ -55,7 +56,9 @@ void PlotEventCoincidences(const std::vector<Double_t> &labr3_broadened_mev,
 // the time distributions of coincidence_input.
 void Coincidence(TString spectrum_input = Constants::SPECTRUM_INPUT,
                  TString coincidence_input = Constants::COINCIDENCE_INPUT) {
-  InitUtils::SetROOTPreferences();
+  TString macros_dir = gSystem->DirName(__FILE__);
+  InitUtils::SetROOTPreferences(PlotSaveFormat::kPNG, macros_dir + "/plots",
+                                macros_dir + "/root_files");
   TRandom3 rng(Constants::BROADENING_SEED);
 
   TFile *spectrum_file = OpenInput(spectrum_input);
@@ -86,8 +89,7 @@ void Coincidence(TString spectrum_input = Constants::SPECTRUM_INPUT,
     return;
   if (labr3.time_ns.size() != cebr3.time_ns.size()) {
     std::cerr << "Error: the LaBr3 and CeBr3 trees of " << coincidence_input
-              << " differ in length, so their rows are not events"
-              << std::endl;
+              << " differ in length, so their rows are not events" << std::endl;
     return;
   }
 
@@ -107,8 +109,7 @@ void Coincidence(TString spectrum_input = Constants::SPECTRUM_INPUT,
       cebr3_broadened_mev,
       "Total_Energy_Deposition_in_CeBr3_with_broadening_coincidence_data");
 
-  PlotEventCoincidences(labr3_broadened_mev, cebr3_broadened_mev, labr3,
-                        cebr3);
+  PlotEventCoincidences(labr3_broadened_mev, cebr3_broadened_mev, labr3, cebr3);
 
   SaveTimeDistribution(labr3.time_ns, "LaBr3 Time Distribution",
                        "LaBr3_Time_Distribution_coincidence_data",

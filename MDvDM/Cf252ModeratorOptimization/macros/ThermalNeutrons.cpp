@@ -8,6 +8,7 @@
 #include <TH1D.h>
 #include <TLegend.h>
 #include <TROOT.h>
+#include <TSystem.h>
 #include <TTree.h>
 #include <iostream>
 #include <vector>
@@ -72,8 +73,7 @@ void PlotThermalNeutronsVsThickness(const TString &input_prefix,
 
     std::cout << "File: " << file->GetName() << std::endl;
     std::cout << "  Total entries: " << n_entries << std::endl;
-    std::cout << "  Number of thermal neutrons: " << thermal_count
-              << std::endl;
+    std::cout << "  Number of thermal neutrons: " << thermal_count << std::endl;
     std::cout << "  Normalized number of thermal neutrons: "
               << normalized_thermal_count << std::endl;
 
@@ -92,8 +92,8 @@ void PlotThermalNeutronsVsThickness(const TString &input_prefix,
   TCanvas *canvas = PlottingUtils::GetConfiguredCanvas();
   // On one line the y title is taller than the frame; two need the room.
   canvas->SetLeftMargin(0.2);
-  TGraph *graph = new TGraph(n_points, thicknesses_cm.data(),
-                             thermal_per_neutron.data());
+  TGraph *graph =
+      new TGraph(n_points, thicknesses_cm.data(), thermal_per_neutron.data());
   PlottingUtils::ConfigureGraph(graph, kRed,
                                 ";HDPE Thickness [cm];#splitline{Thermal "
                                 "Neutrons Per}{Incident Cf-252 Neutron}");
@@ -156,10 +156,9 @@ void PlotThermalEnergySpectrum(const TString &input_prefix,
       PlottingUtils::LegendWidthPx(label_lines) / canvas->GetWw();
   TLegend *legend =
       PlottingUtils::AddLegend(0.88 - legend_width, 0.88, 0.72, 0.86);
-  legend->AddEntry(spectrum,
-                   "#splitline{" + label_first_line + "}{" +
-                       label_second_line + "}",
-                   "f");
+  legend->AddEntry(
+      spectrum,
+      "#splitline{" + label_first_line + "}{" + label_second_line + "}", "f");
   PlottingUtils::AddText(Constants::ANSG_LABEL, Constants::ANSG_LABEL_X,
                          Constants::ANSG_LABEL_Y);
 
@@ -172,11 +171,13 @@ void PlotThermalEnergySpectrum(const TString &input_prefix,
 
 // Thermal (0.015 to 0.030 eV) neutrons behind HDPE moderators of 5 to 12 cm,
 // per incident Cf-252 neutron, and the spectrum behind one of them.
-void ThermalNeutrons(TString input_prefix = Constants::MODERATOR_PREFIX,
-                     Int_t spectrum_thickness_cm =
-                         Constants::SPECTRUM_THICKNESS_CM,
-                     Double_t incident_neutrons = Constants::INCIDENT_NEUTRONS) {
-  InitUtils::SetROOTPreferences();
+void ThermalNeutrons(
+    TString input_prefix = Constants::MODERATOR_PREFIX,
+    Int_t spectrum_thickness_cm = Constants::SPECTRUM_THICKNESS_CM,
+    Double_t incident_neutrons = Constants::INCIDENT_NEUTRONS) {
+  TString macros_dir = gSystem->DirName(__FILE__);
+  InitUtils::SetROOTPreferences(PlotSaveFormat::kPNG, macros_dir + "/plots",
+                                macros_dir + "/root_files");
 
   PlotThermalNeutronsVsThickness(input_prefix, incident_neutrons);
   PlotThermalEnergySpectrum(input_prefix, spectrum_thickness_cm);
