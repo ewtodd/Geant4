@@ -20,16 +20,24 @@ RunAction::RunAction() {
   man->CreateNtupleDColumn("fPostMomZ");
 }
 RunAction::~RunAction() {}
-void RunAction::BeginOfRunAction(const G4Run *run) {
+
+// Named after the moderator thickness, Poly<t>cm, so each run of a thickness
+// scan (scan.mac) leaves its own file, under the names
+// macros/ThermalNeutrons.cpp reads.
+G4String RunAction::OutputStem() const {
+  const DetectorConstruction *detector =
+      static_cast<const DetectorConstruction *>(
+          G4RunManager::GetRunManager()->GetUserDetectorConstruction());
+  return Form("Poly%gcm", detector->GetModeratorThickness() / cm);
+}
+
+void RunAction::BeginOfRunAction(const G4Run *) {
   if (IsMaster())
     OutputMerger::MarkRunStart();
   G4AnalysisManager *man = G4AnalysisManager::Instance();
-  G4int runNumber = run->GetRunID();
-  std::stringstream strRunID;
-  strRunID << runNumber;
-  man->OpenFile("output" + strRunID.str() + ".root");
+  man->OpenFile(OutputStem() + ".root");
 }
-void RunAction::EndOfRunAction(const G4Run *run) {
+void RunAction::EndOfRunAction(const G4Run *) {
   G4AnalysisManager *man = G4AnalysisManager::Instance();
 
   man->Write();
@@ -37,7 +45,6 @@ void RunAction::EndOfRunAction(const G4Run *run) {
 
   if (IsMaster() && G4Threading::IsMultithreadedApplication()) {
     G4int nThreads = G4RunManager::GetRunManager()->GetNumberOfThreads();
-    OutputMerger::MergeThreadOutputs(Form("output%d", run->GetRunID()),
-                                     nThreads);
+    OutputMerger::MergeThreadOutputs(OutputStem(), nThreads);
   }
 }

@@ -7,6 +7,7 @@
 #include "G4Threading.hh"
 #include "G4UserRunAction.hh"
 #include "OutputMerger.hh"
+#include "construction.hh"
 
 class RunAction : public G4UserRunAction {
 public:
@@ -15,6 +16,9 @@ public:
 
   virtual void BeginOfRunAction(const G4Run *);
   virtual void EndOfRunAction(const G4Run *);
+
+private:
+  G4String OutputStem() const;
 };
 
 #endif

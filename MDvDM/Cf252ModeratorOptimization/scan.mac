@@ -1,0 +1,6 @@
+# Thermal-neutron yield against moderator thickness: one 1e6-event run per
+# thickness from 5 to 12 cm, each written to Poly<t>cm.root, the inputs of
+# macros/ThermalNeutrons.cpp. scan_point.mac is the body of the loop.
+/run/numberOfThreads 32
+/run/initialize
+/control/loop scan_point.mac thickness 5 12 1

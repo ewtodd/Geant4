@@ -1,0 +1,3 @@
+# One point of scan.mac; {thickness} is set by its /control/loop.
+/moderator/thickness {thickness} cm
+/run/beamOn 1000000

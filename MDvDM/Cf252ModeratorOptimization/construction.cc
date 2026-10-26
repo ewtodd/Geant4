@@ -1,10 +1,33 @@
 #include "construction.hh"
 
-DetectorConstruction::DetectorConstruction() {}
+DetectorConstruction::DetectorConstruction() {
+  fModeratorThickness = 8.0 * cm;
 
-DetectorConstruction::~DetectorConstruction() {}
+  fMessenger = new G4GenericMessenger(this, "/moderator/",
+                                      "Polyethylene moderator geometry");
+  G4GenericMessenger::Command &thicknessCmd = fMessenger->DeclareMethodWithUnit(
+      "thickness", "cm", &DetectorConstruction::SetModeratorThickness,
+      "Thickness of the moderator slab along the beam.");
+  thicknessCmd.SetParameterName("thickness", false);
+  thicknessCmd.SetRange("thickness>0.");
+  // Only the master owns the geometry; workers pick up the rebuilt one.
+  thicknessCmd.SetToBeBroadcasted(false);
+}
+
+DetectorConstruction::~DetectorConstruction() { delete fMessenger; }
+
+void DetectorConstruction::SetModeratorThickness(G4double thickness) {
+  fModeratorThickness = thickness;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
 
 G4VPhysicalVolume *DetectorConstruction::Construct() {
+  // A thickness change rebuilds everything, so drop the previous geometry.
+  G4GeometryManager::GetInstance()->OpenGeometry();
+  G4PhysicalVolumeStore::GetInstance()->Clean();
+  G4LogicalVolumeStore::GetInstance()->Clean();
+  G4SolidStore::GetInstance()->Clean();
+
   G4NistManager *nist = G4NistManager::Instance();
   G4Material *worldMat = nist->FindOrBuildMaterial("G4_AIR");
 
@@ -19,7 +42,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   G4Material *moderatorMaterial = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
   G4double modBoxHalfX = 50 * cm;
   G4double modBoxHalfY = 50 * cm;
-  G4double modBoxHalfZ = (8.0 / 2) * cm;
+  G4double modBoxHalfZ = fModeratorThickness / 2;
 
   G4double offset = 10 * cm;
 
