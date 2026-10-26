@@ -87,7 +87,6 @@
       {
         devShells = {
           SiDiode = geant4Shell { project = "ANSG/SiDiode"; };
-          "Post-OSU-Escape-Peaks" = geant4Shell { project = "ANSG/Post-OSU-Escape-Peaks"; };
           "Post-OSU-Neutron-Activation" = geant4Shell { project = "ANSG/Post-OSU-Neutron-Activation"; };
           DTModeratorOptimization = geant4Shell { project = "ANSG/DTModeratorOptimization"; };
           CZT = geant4Shell { project = "ANSG/Prelim/CZT"; };
@@ -109,7 +108,7 @@
           default = pkgs.mkShell {
             shellHook = ''
               echo "Pick a project: nix develop .#<Project>"
-              echo "  ANSG:  SiDiode | Post-OSU-Escape-Peaks | Post-OSU-Neutron-Activation | DTModeratorOptimization"
+              echo "  ANSG:  SiDiode | Post-OSU-Neutron-Activation | DTModeratorOptimization"
               echo "         CZT | CdTe | SiLi | GeometryOptimizationHPGe   (ANSG/Prelim)"
               echo "         73mGe-Escape96"
               echo "  MDvDM: Cf252ModeratorOptimization | LaBr3TaggingEfficiency | ModeratedCf252LaBr3CeBr3Coincidence"

@@ -16,8 +16,7 @@
 <!---->
 - This is an umbrella repo of Geant4 simulations: one flake, one dev shell
   per project, named after the project's directory.
-  - `ANSG/`: `SiDiode`, `Post-OSU-Escape-Peaks`,
-    `Post-OSU-Neutron-Activation`, `DTModeratorOptimization`,
+  - `ANSG/`: `SiDiode`, `Post-OSU-Neutron-Activation`, `DTModeratorOptimization`,
     `73mGe-Escape96`, and under `ANSG/Prelim/`: `CZT`, `CdTe`, `SiLi`,
     `GeometryOptimizationHPGe`.
   - `MDvDM/`: `Cf252ModeratorOptimization`, and under `MDvDM/LiF/`:
