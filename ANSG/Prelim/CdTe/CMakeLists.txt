@@ -15,6 +15,10 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/*.hh)
 file(GLOB MACRO_FILES "*.mac")
 
 file(COPY ${MACRO_FILES} DESTINATION ${PROJECT_BINARY_DIR})
+# The generator reads the gammas leaving the Ge sample from optimized.root in
+# the working directory.
+configure_file(${PROJECT_SOURCE_DIR}/../inputs/optimized.root
+               ${PROJECT_BINARY_DIR}/optimized.root COPYONLY)
 
 add_executable(sim sim.cc ${sources} ${headers})
 target_link_libraries(sim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})

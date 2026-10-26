@@ -54,10 +54,12 @@
   changes it between runs, and `scan.mac` runs 5 to 12 cm.
 - `GeometryOptimizationHPGe` takes the crystal thickness and side length
   (cm) before the macro: `build/sim <thickness> <length> run.mac`.
-- Some generators read input files from the working directory, which are
-  not in git: `CZT`, `CdTe` and `SiLi` read `optimized.root`, and
-  `GeometryOptimizationHPGe` reads `thermalEnergySpectra.root`, which
-  `DTModeratorOptimization`'s `AnalyzeAndPlotSpectra.cpp` writes.
+- Some generators read input files from the working directory: `CZT`,
+  `CdTe` and `SiLi` read `optimized.root`, and `GeometryOptimizationHPGe`
+  reads `thermalEnergySpectra.root`, which `DTModeratorOptimization`'s
+  `AnalyzeAndPlotSpectra.cpp` writes. Both are tracked in
+  `ANSG/Prelim/inputs/` (the one exception to `*.root` in `.gitignore`),
+  and each project's CMake copies the one it reads into `build/`.
 <!---->
 ## Data
 <!---->

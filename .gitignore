@@ -29,3 +29,6 @@ AutoDict_*
 # template), which the dev shell puts on LD_LIBRARY_PATH
 obj/
 lib/
+
+# Inputs the Prelim generators read, tracked despite *.root
+!ANSG/Prelim/inputs/*.root

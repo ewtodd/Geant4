@@ -35,6 +35,10 @@ foreach(_map ${GeSimulation_maps})
   file(COPY ${_map} DESTINATION ${PROJECT_BINARY_DIR}/Ge/)
 endforeach()
 file(COPY ${MACRO_FILES} DESTINATION ${PROJECT_BINARY_DIR})
+# The generator samples the thermal neutron spectrum from
+# thermalEnergySpectra.root in the working directory.
+configure_file(${PROJECT_SOURCE_DIR}/../inputs/thermalEnergySpectra.root
+               ${PROJECT_BINARY_DIR}/thermalEnergySpectra.root COPYONLY)
 
 # Add executable
 add_executable(sim ${sources} ${headers})
