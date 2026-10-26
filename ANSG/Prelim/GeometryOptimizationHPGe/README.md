@@ -11,3 +11,9 @@ High-precision hadron elastic and inelastic physics (QGSP_BIC_AllHP), EM standar
 ## Output
 ROOT ntuples recording energy deposition and particle position/momentum in both the Ge target and surrounding air. Runs 32 threads.
 
+
+## Usage
+`build/sim <thickness_cm> <length_cm> run.mac`. The generator samples `thermalEnergySpectra.root` (written by DTModeratorOptimization's analysis) from the working directory.
+
+## Analysis
+`macros/QuenchingFactorUncertainty.cpp` maps the Ge ionization yield (quenching factor) and its uncertainty for the measured points; it reads no simulation data.

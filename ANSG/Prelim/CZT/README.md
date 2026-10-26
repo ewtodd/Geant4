@@ -11,3 +11,6 @@ EM standard (option 4) with Auger and fluorescence.
 ## Output
 ROOT ntuple with energy deposited per event.
 
+
+## Analysis
+`make` in the project directory builds `include/` and `src/` into `lib/libCZTAnalysis`. `macros/CZTAnalysis.cpp` then broadens the runs in `root_files/` and fits the ~68.7 keV peak in each, against the equivalent measurement time.

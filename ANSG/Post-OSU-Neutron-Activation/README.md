@@ -1,4 +1,4 @@
-# Post-OSU — Thermal Neutron Activation in CZT
+# Post-OSU-Neutron-Activation — Thermal Neutron Activation in CZT
 
 Fires thermal neutrons (0.025 eV) at a CZT (Cadmium-Zinc-Telluride) crystal (~19 cm³) and records total energy deposited per event.
 
@@ -10,3 +10,6 @@ High-precision hadron elastic and inelastic physics (QGSP_BIC_AllHP), EM standar
 
 ## Output
 ROOT ntuple with energy deposition per event (keV). Runs across 32 threads.
+
+## Analysis
+`macros/SimHistogram.cpp` adds per-crystal and combined histograms to a run's file. `macros/EnergyDeposition.cpp` plots the four crystals' deposits from 50 to 110 keV with the ¹¹³Cd(n,γ) lines marked, raw and broadened.

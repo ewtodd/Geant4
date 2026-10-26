@@ -13,3 +13,6 @@ ROOT ntuples with "PreEnergy" and "PostEnergy" trees, one row per neutron crossi
 
 ## Thickness scan
 `/moderator/thickness <value> cm` sets the slab thickness and rebuilds the geometry before the next run. `scan.mac` runs 1M events at each thickness from 5 to 12 cm, leaving `Poly5cm.root` to `Poly12cm.root`; `macros/ThermalNeutrons.cpp` plots the thermal-neutron yield against thickness from them.
+
+## Analysis
+`macros/ThermalNeutrons.cpp` plots the thermal-neutron yield against moderator thickness and the thermal spectrum at 8 cm; `macros/WattSpectrum.cpp` draws the Cf-252 Watt spectrum.

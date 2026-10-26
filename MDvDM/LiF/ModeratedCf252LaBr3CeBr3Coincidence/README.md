@@ -9,4 +9,7 @@ Neutron-gamma discrimination using time-correlated coincidence detection across 
 Watt fission spectrum source, QGSP_BIC_AllHP hadronics, EM standard (option 4), radioactive decay.
 
 ## Output
-ROOT ntuples with energy and timing in both LaBr3 and CeBr3 detectors. Analysis produces coincidence plots, energy spectra comparisons, and timing distributions.
+ROOT ntuples with energy and timing in both LaBr3 and CeBr3 detectors.
+
+## Analysis
+`macros/Coincidence.cpp` plots the LaBr3 and CeBr3 spectra, their per-event coincidences within 0.1 ns, and the timing distributions; `macros/AntiCoincidence.cpp` compares the LaBr3 spectrum before and after vetoing events with a coincident CeBr3 hit. `macros/WattSpectrum.cpp` draws the Cf-252 Watt spectrum.

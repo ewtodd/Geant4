@@ -9,6 +9,7 @@ The effects of **air** (energy loss before reaching the detector) and **angle of
 EM standard (option 4) with Auger cascade and fluorescence enabled.
 
 ## Output
-ROOT ntuple with energy deposited per event (keV). Analysis script applies Gaussian broadening (16 keV FWHM @ 5486 keV) to simulate detector resolution.
+ROOT ntuple with energy deposited per event (keV).
 
-**No flake.nix yet.**
+## Analysis
+`macros/EnergyDeposition.cpp` overlays the spectra of the runs in `root_files/`, optionally with Gaussian broadening (16 keV FWHM @ 5486 keV) for the detector resolution.

@@ -16,4 +16,6 @@ Thermal neutron support, HP hadron elastic + inelastic (QGSP_BIC_AllHP), EM stan
 ## Output
 Three ROOT ntuples (Ge, CdTe, NaI) with energy (MeV) and time (ns) per event.
 Runs 1M events on 12 threads.
-Analysis includes coincidence patterns and resolution-broadened energy spectra.
+
+## Analysis
+`macros/CoincidenceSpectra.cpp` plots the Ge spectrum, the resolution-broadened CdTe and NaI spectra, and the CdTe-against-NaI coincidences within 0.1 ns.

@@ -10,3 +10,6 @@ QGSP_BIC_HP for hadronic interactions, high-precision neutron elastic scattering
 
 ## Output
 ROOT ntuples with pre- and post-moderation neutron energies. Runs 32 threads.
+
+## Analysis
+`macros/AnalyzeAndPlotSpectra.cpp` counts the thermal neutrons behind 10 to 17 cm of water and polyethylene, plots the yield against thickness and the thermal spectra, and writes the normalized water spectrum to `root_files/thermalEnergySpectra.root`, the source GeometryOptimizationHPGe samples.

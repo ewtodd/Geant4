@@ -9,4 +9,7 @@ The efficiency of tagging neutron capture events using the LiF scintillator in c
 Hadron elastic (HP) + inelastic (QGSP_BIC_AllHP), EM standard (option 4), radioactive decay.
 
 ## Output
-ROOT ntuples with energy deposition and timing for both detectors. Analysis applies LaBr3 resolution broadening (2.9% FWHM @ 662 keV).
+ROOT ntuples with energy deposition and timing for both detectors.
+
+## Analysis
+`macros/PhotopeakEfficiency.cpp` broadens the LaBr3 spectrum (2.9% FWHM @ 662 keV), fits the 2 MeV photopeak on a linear background, and prints the photopeak efficiency with its uncertainty.
