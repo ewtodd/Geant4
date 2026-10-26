@@ -15,7 +15,7 @@ void AddHistogram(TString filename) {
   EColor colors[4] = {kP10Blue, kP10Red, kP10Cyan, kP10Orange};
 
   // Per-crystal full-range histograms
-  TH1F *crystalHist[4];
+  TH1F *crystalHist[4] = {nullptr, nullptr, nullptr, nullptr};
   for (Int_t c = 0; c < 4; c++) {
     TString treeName = Form("CZT_%d", c);
     TTree *tree = static_cast<TTree *>(file->Get(treeName));
@@ -34,9 +34,9 @@ void AddHistogram(TString filename) {
              Constants::BIN_WIDTH_EV, perSecond.Data()),
         Constants::HIST_NBINS, Constants::HIST_XMIN, Constants::HIST_XMAX);
 
-    Int_t n_entries = tree->GetEntries();
+    Long64_t n_entries = tree->GetEntries();
     tree->LoadBaskets();
-    for (Int_t i = 0; i < n_entries; i++) {
+    for (Long64_t i = 0; i < n_entries; i++) {
       tree->GetEntry(i);
       crystalHist[c]->Fill(energy);
     }
